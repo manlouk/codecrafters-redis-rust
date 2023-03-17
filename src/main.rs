@@ -8,7 +8,7 @@ use std::io::Result;
 
 fn handle_connection(stream: &mut TcpStream){
 
-    let response = b"PONG";
+    let response = b"+PONG\r\n";
 
     let mut writer = io::BufWriter::new(stream);
 
