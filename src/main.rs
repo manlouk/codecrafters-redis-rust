@@ -32,7 +32,7 @@ fn handle_connection(stream: &mut TcpStream){
                 println!("{}",_line);
                 let new_line = _line.replace("*", "").parse().unwrap();
                 for i in 0..new_line{
-                    writer.write_all(b"PONG");
+                    writer.write_all(b"+PONG\r\n");
                 
                 }
                 writer.flush();
