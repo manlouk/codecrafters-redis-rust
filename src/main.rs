@@ -38,10 +38,11 @@ fn handle_connection(stream: &mut TcpStream){
                 
                 }
                 writer.flush();
-                break;
+                
             }
             Err(_line) => panic!("No valid input")
         }
+        break;
         
 
     }
