@@ -29,10 +29,10 @@ fn handle_connection(stream: &mut TcpStream){
     for line in reader.lines(){
         match line{
             Ok(_line) => {
-                println!("{}",_line);
-                let new_line = _line.replace("*", "").parse().unwrap();
-                println!("{}", new_line);
-                for i in 0..new_line{
+               
+                let new_line: i16 = _line.replace("*", "").parse().unwrap();
+              
+                for i in 0..new_line+1{
                     writer.write_all(b"+PONG\r\n");
                 
                 }
