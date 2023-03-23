@@ -22,13 +22,13 @@ fn handle_connection(stream: &mut TcpStream){
     let mut writer = BufWriter::new(stream);
 
     let mut buf = String::new();
-   
+    let mut eof = true;
 
-    while true{
+    while eof{
         match reader.read_line(&mut buf){
             Ok(0) => {
                  println!("Zero bytes");
-                 return
+                 eof = false;
             },
             Ok(_)=> {
                 let num = buf.chars().nth(1).unwrap().to_digit(10);
@@ -40,7 +40,7 @@ fn handle_connection(stream: &mut TcpStream){
                             writer.write_all(response).unwrap();
                             writer.flush().unwrap();
                         }
-                        return    
+                        eof = false  
                     },
                     None => {
                         println!("{:?}", num);
@@ -51,7 +51,7 @@ fn handle_connection(stream: &mut TcpStream){
             },
             Err(_) => {
                 println!("Error");
-                ()
+                eof = false
             }
     }
     }
