@@ -49,8 +49,8 @@ fn handle_connection(stream: &mut TcpStream){
 
             },
             Err(_) => {
-                println!("Error");
-                eof = false
+                println!("{:?}", buf);
+                
             }
     }
     }
@@ -76,7 +76,6 @@ fn handle_connection(stream: &mut TcpStream){
 
 
     // let num = buf.chars().nth(1).unwrap().to_digit(10).unwrap();
-   println!("Outside");
    
     
 }
