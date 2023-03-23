@@ -33,9 +33,10 @@ fn handle_connection(stream: &mut TcpStream){
 
     for i in 0..num{
         writer.write(response).unwrap();
-        writer.flush().unwrap();
+       
 
     }
+    writer.flush();
     
 }
    
