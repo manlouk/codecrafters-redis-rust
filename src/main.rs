@@ -27,16 +27,18 @@ fn handle_connection(stream: &mut TcpStream){
 
     loop{
         let len = reader.read_line(&mut buf).unwrap();
-        println!("{}", len);
-        if len==6{
-            writer.write(response).unwrap();
-            writer.flush().unwrap();
-        }
-        else if len==0{
-            break;
-        }
-        else{
-            continue;
+        
+        match len {
+            _len if _len==0 =>{
+                break;
+            }
+            _len if _len==6 => {
+                writer.write(response).unwrap();
+                writer.flush().unwrap();
+            }
+            _=>{
+                println!("No ping command");
+            }
         }
     }
     
