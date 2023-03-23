@@ -14,38 +14,28 @@ fn handle_connection(stream: &mut TcpStream){
 
     let response = b"+PONG\r\n";
 
+
     println!("Inside handle");
 
     let stream_copy = stream.try_clone().unwrap();
+    let mut reader = BufReader::new(stream_copy);
+
+    let mut buf = String::new();
     
-    let mut writer = BufWriter::new(stream_copy);
+    reader.read_line(&mut buf);
 
-    let mut reader = BufReader::new(stream);
+    let num = buf.chars().nth(1).unwrap() as i32;
     
-    
+    let mut writer = BufWriter::new(stream);
 
-    println!("{:?}",reader);
 
-    for line in reader.lines(){
-        match line{
-            Ok(_line) => {
-               
-                let new_line: i16 = _line.replace("*", "").parse().unwrap();
 
-              
-                for i in 0..new_line+1{
-                    writer.write(b"+PONG\r\n");
-                
-                }
-                writer.flush();
-                
-            }
-            Err(_line) => panic!("No valid input")
-        }
-        break;
-        
+    for i in 0..num{
+        writer.write(response).unwrap();
+        writer.flush().unwrap();
 
     }
+}
    
     
    
@@ -62,8 +52,7 @@ fn handle_connection(stream: &mut TcpStream){
     // stream.flush().unwrap();
     
    
-  
-}
+
 
 fn main()-> Result<()>{
     // You can use print statements as follows for debugging, they'll be visible when running tests.
