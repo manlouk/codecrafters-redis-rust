@@ -40,6 +40,7 @@ fn handle_connection(stream: &mut TcpStream){
                             writer.write_all(response).unwrap();
                             writer.flush().unwrap();
                         }
+                        return    
                     },
                     None => {
                         println!("{:?}", num);
