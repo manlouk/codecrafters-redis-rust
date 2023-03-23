@@ -19,24 +19,65 @@ fn handle_connection(stream: &mut TcpStream){
 
     let stream_copy = stream.try_clone().unwrap();
     let mut reader = BufReader::new(stream_copy);
-
-    let mut buf = String::new();
-    
-    reader.read_line(&mut buf);
-
-
-    let num = buf.chars().nth(1).unwrap().to_digit(10).unwrap();
-    
     let mut writer = BufWriter::new(stream);
 
-    
+    let mut buf = String::new();
+   
 
-    for i in 0..num{
-        writer.write(response).unwrap();
-       
+    while true{
+        match reader.read_line(&mut buf){
+            Ok(0) => {
+                 println!("Zero bytes");
+                 return
+            },
+            Ok(_)=> {
+                let num = buf.chars().nth(1).unwrap().to_digit(10);
+                println!("{:?}", num);
+                match num {
+                    Some(_num) => {
+                        println!("{}",_num);
+                        for i in 0.._num{
+                            writer.write_all(response).unwrap();
+                            writer.flush().unwrap();
+                        }
+                    },
+                    None => {
+                        println!("{:?}", num);
+                        ()
+                    }
+                }
 
+            },
+            Err(_) => {
+                println!("Error");
+                ()
+            }
     }
-    writer.flush();
+    }
+    // let buf = reader.lines().nth(0).unwrap().unwrap().chars().nth(1).unwrap().to_digit(10);
+
+    // println!("{:?}", buf);
+   
+    
+    // match buf{
+    //     Some(result) => 
+    //         {
+                
+    //             for i in 0..result{
+    //                 writer.write_all(response).unwrap();
+    //                 writer.flush().unwrap();
+                   
+            
+    //             }
+
+    //         },
+    //     _ => ()
+    // };
+
+
+    // let num = buf.chars().nth(1).unwrap().to_digit(10).unwrap();
+   println!("Outside");
+   
     
 }
    
@@ -66,7 +107,6 @@ fn main()-> Result<()>{
     let listener = TcpListener::bind("127.0.0.1:6379").unwrap();
    
     for stream in listener.incoming() {
-        println!("{:?}", stream);
         match stream{
             Ok(mut _stream) =>{
                handle_connection(&mut _stream);
