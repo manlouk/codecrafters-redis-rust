@@ -1,12 +1,10 @@
 use std::io::BufRead;
 use std::io::BufReader;
 use std::io::BufWriter;
-use std::io::Read;
 use std::io::Write;
 //Uncomment this block to pass the first stage
 use std::net::TcpListener;
 use std::net::TcpStream;
-use std::io;
 use std::io::Result;
 
 
@@ -18,28 +16,29 @@ fn handle_connection(stream: &mut TcpStream){
     println!("Inside handle");
 
     let stream_copy = stream.try_clone().unwrap();
-    let mut reader = BufReader::new(stream_copy);
-    let mut writer = BufWriter::new(stream);
+    let mut reader = BufReader::new(stream);
+    let mut writer = BufWriter::new(stream_copy);
 
     let mut buf = String::new();
-    let mut eof = true;
+    
 
-    while eof{
+   loop{
         match reader.read_line(&mut buf){
             Ok(0) => {
                  println!("Zero bytes");
-                 eof = false;
+                 break
             },
             Ok(_)=> {
                 let num = buf.chars().nth(1).unwrap().to_digit(10);
-                println!("{:?}", num);
+               
                 match num {
                     Some(_num) => {
                         println!("{}",_num);
-                        for i in 0.._num{
+                        for _i in 0.._num+1{
                             writer.write(response).unwrap();
                             writer.flush().unwrap();
-                        } 
+                        }
+                     break    
                     },
                     None => {
                         println!("{:?}", num);
@@ -48,8 +47,8 @@ fn handle_connection(stream: &mut TcpStream){
                 }
 
             },
-            Err(_) => {
-                println!("{:?}", buf);
+            Err(e) => {
+                println!("Error {:?}", e);
                 
             }
     }
