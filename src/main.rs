@@ -13,37 +13,28 @@ use std::io::Result;
 fn handle_connection(stream: &mut TcpStream){
 
     let response = b"+PONG\r\n";
-    
-    let mut stream_copy = stream.try_clone().unwrap();
 
-    let mut buf = String::new();
+
+    let mut buf = [0;512];
     // reader.read_to_string(&mut buf);
 
     println!("{:?}", buf);
 
-    let mut reader = BufReader::new(stream);
-    let mut writer = BufWriter::new(stream_copy);
 
-
+ 
     loop{
-        let len = reader.read_line(&mut buf).unwrap();
+        let len = stream.read(&mut buf).unwrap();
         
         match len {
             _len if _len==0 =>{
                 break;
             }
-            _len if _len==6 => {
-                writer.write(response).unwrap();
-                writer.flush().unwrap();
-            }
             _=>{
-                println!("No ping command");
+                stream.write(response).unwrap();
+               
             }
         }
-    }
-    
- 
-   
+    }   
    
     
 }   
