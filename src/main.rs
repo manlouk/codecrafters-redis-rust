@@ -1,6 +1,8 @@
+use core::num;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::io::BufWriter;
+use std::io::Read;
 use std::io::Write;
 //Uncomment this block to pass the first stage
 use std::net::TcpListener;
@@ -11,89 +13,38 @@ use std::io::Result;
 fn handle_connection(stream: &mut TcpStream){
 
     let response = b"+PONG\r\n";
+    
+    let mut stream_copy = stream.try_clone().unwrap();
 
+    let mut buf = String::new();
+    // reader.read_to_string(&mut buf);
 
-    println!("Inside handle");
+    println!("{:?}", buf);
 
-    let stream_copy = stream.try_clone().unwrap();
     let mut reader = BufReader::new(stream);
     let mut writer = BufWriter::new(stream_copy);
 
-    let mut buf = String::new();
-    
 
-   loop{
-        match reader.read_line(&mut buf){
-            Ok(0) => {
-                 println!("Zero bytes");
-                 break
-            },
-            Ok(_)=> {
-                let num = buf.chars().nth(1).unwrap().to_digit(10);
-               
-                match num {
-                    Some(_num) => {
-                        println!("{}",_num);
-                        for _i in 0.._num+1{
-                            writer.write(response).unwrap();
-                            writer.flush().unwrap();
-                        }
-                     break    
-                    },
-                    None => {
-                        println!("{:?}", num);
-                        ()
-                    }
-                }
-
-            },
-            Err(e) => {
-                println!("Error {:?}", e);
-                
-            }
+    loop{
+        let len = reader.read_line(&mut buf).unwrap();
+        println!("{}", len);
+        if len==6{
+            writer.write(response).unwrap();
+            writer.flush().unwrap();
+        }
+        else if len==0{
+            break;
+        }
+        else{
+            continue;
+        }
     }
-    }
-    // let buf = reader.lines().nth(0).unwrap().unwrap().chars().nth(1).unwrap().to_digit(10);
-
-    // println!("{:?}", buf);
+    
+ 
+   
    
     
-    // match buf{
-    //     Some(result) => 
-    //         {
-                
-    //             for i in 0..result{
-    //                 writer.write_all(response).unwrap();
-    //                 writer.flush().unwrap();
-                   
-            
-    //             }
-
-    //         },
-    //     _ => ()
-    // };
-
-
-    // let num = buf.chars().nth(1).unwrap().to_digit(10).unwrap();
-   
-    
-}
-   
-    
-   
-    
-   
-    // let mut buf = String::new();
-    // // reader.read_to_string(&mut buf);
-
-    // println!("{:?}", buf);
-
-    // let mut writer = io::BufWriter::new(stream);
-
-    // stream.write(response).unwrap();
-    // stream.flush().unwrap();
-    
-   
+}   
 
 
 fn main()-> Result<()>{
