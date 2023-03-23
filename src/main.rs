@@ -24,17 +24,19 @@ fn handle_connection(stream: &mut TcpStream){
     
     reader.read_line(&mut buf);
 
-    let num = buf.chars().nth(1).unwrap() as i32;
+
+    let num = buf.chars().nth(1).unwrap().to_digit(10).unwrap();
     
     let mut writer = BufWriter::new(stream);
 
-
+    
 
     for i in 0..num{
         writer.write(response).unwrap();
         writer.flush().unwrap();
 
     }
+    
 }
    
     
