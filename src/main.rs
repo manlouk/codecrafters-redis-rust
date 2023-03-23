@@ -37,10 +37,9 @@ fn handle_connection(stream: &mut TcpStream){
                     Some(_num) => {
                         println!("{}",_num);
                         for i in 0.._num{
-                            writer.write_all(response).unwrap();
+                            writer.write(response).unwrap();
                             writer.flush().unwrap();
-                        }
-                        eof = false  
+                        } 
                     },
                     None => {
                         println!("{:?}", num);
