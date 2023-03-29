@@ -8,7 +8,7 @@ use std::io::Write;
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::io::Result;
-
+use std::thread;
 
 fn handle_connection(stream: &mut TcpStream){
 
@@ -49,12 +49,14 @@ fn main()-> Result<()>{
     let listener = TcpListener::bind("127.0.0.1:6379").unwrap();
    
     for stream in listener.incoming() {
-        match stream{
+         match stream{
             Ok(mut _stream) =>{
-               handle_connection(&mut _stream);
+               let handle = thread::spawn(move || handle_connection(&mut _stream));
+               handle.join().unwrap();
             },
             Err(_stream) => println!("FAILED")
           };
+        
     }
     Ok(())
 }
