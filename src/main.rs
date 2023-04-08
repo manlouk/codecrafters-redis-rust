@@ -1,7 +1,3 @@
-use core::num;
-use std::io::BufRead;
-use std::io::BufReader;
-use std::io::BufWriter;
 use std::io::Read;
 use std::io::Write;
 //Uncomment this block to pass the first stage
@@ -18,7 +14,7 @@ fn handle_connection(stream: &mut TcpStream){
     let mut buf = [0;512];
     // reader.read_to_string(&mut buf);
 
-    println!("{:?}", buf);
+
 
 
  
